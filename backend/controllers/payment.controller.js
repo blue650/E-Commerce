@@ -16,15 +16,21 @@ export const createCheckoutSession = async (req, res) => {
 			const amount = Math.round(product.price * 100); // stripe wants u to send in the format of cents
 			totalAmount += amount * product.quantity;
 
-			return {
-				price_data: {
-					currency: "usd",
-					product_data: {
-						name: product.name,
-						images: [product.image],
-					},
-					unit_amount: amount,
+			const priceData = {
+				currency: "usd",
+				product_data: {
+					name: product.name,
 				},
+				unit_amount: amount,
+			};
+			
+			// Only add images if product.image exists and is not null
+			if (product.image) {
+				priceData.product_data.images = [product.image];
+			}
+
+			return {
+				price_data: priceData,
 				quantity: product.quantity || 1,
 			};
 		});
