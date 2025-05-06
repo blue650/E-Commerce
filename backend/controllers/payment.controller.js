@@ -2,6 +2,7 @@ import Coupon from "../models/coupon.model.js";
 import Order from "../models/order.model.js";
 import { stripe } from "../lib/stripe.js";
 import { v2 as cloudinary } from 'cloudinary';
+import { redeemCoupon } from "./coupon.controller.js";
 
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -96,15 +97,12 @@ export const checkoutSuccess = async (req, res) => {
 
 		if (session.payment_status === "paid") {
 			if (session.metadata.couponCode) {
-				await Coupon.findOneAndUpdate(
-					{
-						code: session.metadata.couponCode,
-						userId: session.metadata.userId,
-					},
-					{
-						isActive: false,
-					}
-				);
+				// Redeem coupon using redeemCoupon controller (suppressed response)
+				const fakeRes = {
+					status: () => ({ json: () => {} }),
+					json: () => {}
+				};
+				await redeemCoupon({ body: { code: session.metadata.couponCode } }, fakeRes);
 			}
 
 			// create a new Order

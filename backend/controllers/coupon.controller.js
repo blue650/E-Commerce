@@ -48,4 +48,30 @@ export const validateCoupon = async (req, res) => {
         console.error("Error in validateCoupon controller", error.message);
         res.status(500).json({ message: "Server error", error: error.message });
     }
+};
+
+export const redeemCoupon = async (req, res) => {
+    try {
+        const { code } = req.body;
+        // Retrieve coupon by ID from Stripe
+        const coupon = await stripe.coupons.retrieve(code);
+        // If coupon doesn't exist or isn't valid, return 404
+        if (!coupon || !coupon.valid) {
+            return res.status(404).json({ message: "Coupon not found or invalid" });
+        }
+        // Redeem coupon by deleting it so it can't be used again
+        await stripe.coupons.del(code);
+        // Return success with discount percentage
+        res.json({
+            message: "Coupon redeemed successfully",
+            code: coupon.id,
+            discountPercentage: coupon.percent_off ?? null,
+        });
+    } catch (error) {
+        if (error.statusCode === 404) {
+            return res.status(404).json({ message: "Coupon not found" });
+        }
+        console.error("Error in redeemCoupon controller", error.message);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
 }; 
