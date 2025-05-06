@@ -24,14 +24,14 @@ const OrderSummary = () => {
 
 		window.location.href = res.data.url;
 
-		const session = res.data;
-		const result = await stripe.redirectToCheckout({
-			sessionId: session.id,
-		});
+		// const session = res.data;
+		// const result = await stripe.redirectToCheckout({
+		// 	sessionId: session.id,
+		// });
 
-		if (result.error) {
-			console.error("Error:", result.error);
-		}
+		// if (result.error) {
+		// 	console.error("Error:", result.error);
+		// }
 	};
 
 	return (
