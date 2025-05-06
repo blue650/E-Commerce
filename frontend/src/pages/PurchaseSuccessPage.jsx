@@ -68,7 +68,7 @@ const PurchaseSuccessPage = () => {
 
 					<div className='space-y-4'>
 						<a
-							href="/Blue-Collar-Business-Guide-EBook.zip" // Link to the zip file
+							href={process.env.CLIENT_URL + "/assets/Blue-Collar-Business-Guide-EBook.zip"} // Link to the zip file
 							download
 							className='w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4
               rounded-lg transition duration-300 flex items-center justify-center'
