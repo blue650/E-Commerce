@@ -1,4 +1,3 @@
-import Coupon from "../models/coupon.model.js";
 import Order from "../models/order.model.js";
 import { stripe } from "../lib/stripe.js";
 import { v2 as cloudinary } from 'cloudinary';
@@ -46,11 +45,17 @@ export const createCheckoutSession = async (req, res) => {
 			};
 		}));
 
-		let coupon = null;
+		let discountPercentage = 0;
 		if (couponCode) {
-			coupon = await Coupon.findOne({ code: couponCode, userId: req.user._id, isActive: true });
-			if (coupon) {
-				totalAmount -= Math.round((totalAmount * coupon.discountPercentage) / 100);
+			try {
+				const stripeCoupon = await stripe.coupons.retrieve(couponCode);
+				if (!stripeCoupon.valid || (stripeCoupon.redeem_by && stripeCoupon.redeem_by < Math.floor(Date.now() / 1000))) {
+					throw new Error("Invalid or expired coupon");
+				}
+				discountPercentage = stripeCoupon.percent_off ?? 0;
+				totalAmount -= Math.round((totalAmount * discountPercentage) / 100);
+			} catch (err) {
+				console.warn("Coupon retrieval failed:", err.message);
 			}
 		}
 
@@ -60,12 +65,8 @@ export const createCheckoutSession = async (req, res) => {
 			mode: "payment",
 			success_url: `${process.env.CLIENT_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
 			cancel_url: `${process.env.CLIENT_URL}/purchase-cancel`,
-			discounts: coupon
-				? [
-						{
-							coupon: await createStripeCoupon(coupon.discountPercentage),
-						},
-				  ]
+			discounts: discountPercentage
+				? [{ coupon: couponCode }]
 				: [],
 			metadata: {
 				userId: req.user._id.toString(),
@@ -80,10 +81,21 @@ export const createCheckoutSession = async (req, res) => {
 			},
 		});
 
+		let giftCouponCode = null;
 		if (totalAmount >= 20000) {
-			await createNewCoupon(req.user._id);
+			const giftCoupon = await stripe.coupons.create({
+				percent_off: 10,
+				duration: "once",
+				redeem_by: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
+			});
+			giftCouponCode = giftCoupon.id;
 		}
-		res.status(200).json({ id: session.id, totalAmount: totalAmount / 100, url: session.url });
+		res.status(200).json({
+			id: session.id,
+			totalAmount: totalAmount / 100,
+			url: session.url,
+			giftCouponCode,
+		});
 	} catch (error) {
 		console.error("Error processing checkout:", error);
 		res.status(500).json({ message: "Error processing checkout", error: error.message });
@@ -131,27 +143,3 @@ export const checkoutSuccess = async (req, res) => {
 		res.status(500).json({ message: "Error processing successful checkout", error: error.message });
 	}
 };
-
-async function createStripeCoupon(discountPercentage) {
-	const coupon = await stripe.coupons.create({
-		percent_off: discountPercentage,
-		duration: "once",
-	});
-
-	return coupon.id;
-}
-
-async function createNewCoupon(userId) {
-	await Coupon.findOneAndDelete({ userId });
-
-	const newCoupon = new Coupon({
-		code: "GIFT" + Math.random().toString(36).substring(2, 8).toUpperCase(),
-		discountPercentage: 10,
-		expirationDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-		userId: userId,
-	});
-
-	await newCoupon.save();
-
-	return newCoupon;
-}

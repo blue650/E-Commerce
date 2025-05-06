@@ -59,8 +59,10 @@ export const redeemCoupon = async (req, res) => {
         if (!coupon || !coupon.valid) {
             return res.status(404).json({ message: "Coupon not found or invalid" });
         }
-        // Redeem coupon by deleting it so it can't be used again
-        await stripe.coupons.del(code);
+        // Mark coupon as used by updating its metadata
+        await stripe.coupons.update(code, {
+            metadata: { used: 'true' }
+        });
         // Return success with discount percentage
         res.json({
             message: "Coupon redeemed successfully",
