@@ -1,6 +1,13 @@
 import Coupon from "../models/coupon.model.js";
 import Order from "../models/order.model.js";
 import { stripe } from "../lib/stripe.js";
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export const createCheckoutSession = async (req, res) => {
 	try {
@@ -12,7 +19,7 @@ export const createCheckoutSession = async (req, res) => {
 
 		let totalAmount = 0;
 
-		const lineItems = products.map((product) => {
+		const lineItems = await Promise.all(products.map(async (product) => {
 			const amount = Math.round(product.price * 100); // stripe wants u to send in the format of cents
 			totalAmount += amount * product.quantity;
 
@@ -24,16 +31,19 @@ export const createCheckoutSession = async (req, res) => {
 				unit_amount: amount,
 			};
 			
-			// Only add images if product.image exists and is not null
+			// Upload base64 image to Cloudinary and set the secure URL for Stripe
 			if (product.image) {
-				priceData.product_data.images = [product.image];
+				const uploadResult = await cloudinary.uploader.upload(product.image, {
+					folder: "stripe_images",
+				});
+				priceData.product_data.images = [uploadResult.secure_url];
 			}
 
 			return {
 				price_data: priceData,
 				quantity: product.quantity || 1,
 			};
-		});
+		}));
 
 		let coupon = null;
 		if (couponCode) {
