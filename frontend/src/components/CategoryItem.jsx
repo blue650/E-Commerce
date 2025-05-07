@@ -14,11 +14,14 @@ const CategoryItem = ({ title, description, imageUrl }) => {
 
     useEffect(() => {
         fetchAllProducts(); // Fetch products when the component mounts
-        if (firstProduct) {
-            console.log("First product name:", firstProduct.name); // Print product name
-        }
-    }, [fetchAllProducts, firstProduct]);
+    }, [fetchAllProducts]);
 
+    useEffect(() => {
+      if (firstProduct) {
+        console.log("First product name:", firstProduct.name); // ✅ Only runs when products are ready
+      }
+    }, [firstProduct]);
+    
     const handleAddToCart = () => {
         if (!user) {
             toast.error("Please login to add products to cart", { id: "login" });
