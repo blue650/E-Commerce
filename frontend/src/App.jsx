@@ -37,7 +37,7 @@ function App() {
       </div>
       
 
-      <div className="flex-1 overflow-y-auto scroll-touch">
+      <div className="relative z-50 pt-20">
         <Navbar/>
         <Routes>
           <Route path='/' element={<HomePage />} />
