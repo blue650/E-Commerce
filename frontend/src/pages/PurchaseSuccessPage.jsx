@@ -73,7 +73,7 @@ const PurchaseSuccessPage = () => {
 							className='w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4
               rounded-lg transition duration-300 flex items-center justify-center'
 						>
-							Download Your eBook
+							Download Your eBook (Password: GUIDE)
 						</a>
 						<Link
 							to={"/"}
