@@ -8,7 +8,7 @@ const AboutUsComponent = () => {
         {/* Left Side: Title */}
         <div className="sm:w-1/2 mb-8 sm:mb-0 text-center sm:text-left">
           <h2 className="text-4xl font-bold text-gray-900 mb-4 text-shadow">
-            About Us
+            Message From Author
           </h2>
           <div className="h-1 w-16 bg-black mx-auto sm:mx-0 mb-8"></div> {/* Horizontal Line */}
         </div>
@@ -18,10 +18,9 @@ const AboutUsComponent = () => {
           {/* Box with shadow around the text */}
           <div className="bg-white text-center p-6 rounded-3xl drop-shadow-2xl transition-shadow duration-300">
             <p className="text-lg text-gray-800 leading-relaxed">
-              We specialize in helping blue-collar businesses navigate the challenges of modern markets. 
-              Our mission is to empower hardworking individuals with the tools, insights, and strategies 
-              they need to thrive in their industries. Built upon personal experiences and lessons, this book
-              will give an honest and real perspective on how to accurately and effectively navigate a new blue-collar business.
+              How's it going guys, my name is Ashur and I am the author of this e-book/video series. I made this guide because I've came from the bottom. Being a high school dropout, being through the military, to starting multiple businesses and just recently grew my pool service business to make a quarter million dollars annually. With sights of opening up a bodybuilding gym in the very near future. 
+
+If you're willing to put in the work, I highly recommend looking through this guide. Im giving you a damn blueprint to start and grow your business in any trade.
             </p>
           </div>
         </div>
