@@ -44,10 +44,6 @@ const CategoryItem = ({ title, description, imageUrl }) => {
               <h2 className="text-4xl font-bold text-gray-900 mb-4">
                 Get Your Copy Today!
               </h2>
-              <p className="text-lg text-gray-700 mb-6">
-                This eBook provides valuable insights to help you navigate the challenges of running a blue-collar business.
-                Buy now and start learning how to thrive in your industry!
-              </p>
               <button 
                 className="bg-blue-600 text-white py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition duration-300 flex items-center"
                 onClick={handleAddToCart}

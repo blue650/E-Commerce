@@ -13,8 +13,7 @@ const SampleVideos = () => {
           <div className="flex-shrink-0 w-full sm:w-1/2">
             <div className="bg-gray-100 p-6 rounded-lg shadow-lg">
               <p className="text-lg text-gray-800 leading-relaxed">
-                Here’s a sneak peek of the content in the book. In this excerpt, we explore the first steps of navigating the challenges in a blue-collar business. 
-                Learn how to build a strong foundation, develop leadership skills, and maximize efficiency for long-term success.
+                Sample video from section 4 part two of the blue-collar business guide; section 4 is about your bank accounts.
               </p>
             </div>
           </div>
@@ -28,7 +27,7 @@ const SampleVideos = () => {
                 style={{ height: "300px", width: "100%" }} // Adjusted height and set width to 100% for responsiveness
                 playsInline // Prevents video from expanding
               >
-                <source src="introvideo.mp4" type="video/mp4" />
+                <source src="Introvid.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
