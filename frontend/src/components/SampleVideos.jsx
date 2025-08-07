@@ -4,7 +4,7 @@ const SampleVideos = () => {
   return (
     <div className="bg-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto text-center">
-        <h2 className="text-4xl font-bold text-gray-900 mb-12">Sample Excerpt & Video</h2>
+        <h2 className="text-4xl font-bold text-gray-900 mb-12">Sample Video</h2>
 
         {/* Container for the excerpt and video */}
         <div className="flex flex-col sm:flex-row sm:space-x-8 space-y-8 sm:space-y-0 justify-center">
@@ -27,7 +27,7 @@ const SampleVideos = () => {
                 style={{ height: "300px", width: "100%" }} // Adjusted height and set width to 100% for responsiveness
                 playsInline // Prevents video from expanding
               >
-                <source src="Introvid.mp4" type="video/mp4" />
+                <source src="introvideo.mov" type="video/quicktime" />
                 Your browser does not support the video tag.
               </video>
             </div>
