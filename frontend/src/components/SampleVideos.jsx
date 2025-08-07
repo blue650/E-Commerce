@@ -27,7 +27,7 @@ const SampleVideos = () => {
                 style={{ height: "300px", width: "100%" }} // Adjusted height and set width to 100% for responsiveness
                 playsInline // Prevents video from expanding
               >
-                <source src="introvideo.mp4" type="video/mp4" />
+                <source src="introvid.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
