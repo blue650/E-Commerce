@@ -49,7 +49,7 @@ const HomPage = () => {
                 controls
                 style={{ height: "700px", width: "125%" }}
               >
-                <source src="intro.mov" type="video/quicktime" />
+                <source src="intro.mp4" type="video/mp4" />
                 
                 Your browser does not support the video tag.
               </video>
