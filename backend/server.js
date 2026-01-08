@@ -45,9 +45,9 @@ if (process.env.NODE_ENV === "production") {
 async function seedInitialProducts() {
 	// Define the exact document you requested to insert into `db.products`.
 	const seedProduct = {
-		name: "Blue collar business guide",
+		name: "Blue collar business Guide",
 		description: "A practical guide for starting and growing a blue collar business",
-		price: 29.99,
+		price: 1.99,
 		image: "https://www.bluecollarbizguide.com/logo.jpg",
 		category: "business",
 		isFeatured: true,
