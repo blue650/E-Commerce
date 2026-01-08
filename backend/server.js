@@ -11,6 +11,7 @@ import paymentRoutes from "./routes/payment.route.js";
 import analyticsRoutes from "./routes/analytics.route.js";
 
 import { connectDB } from "./lib/db.js";
+import Product from "./models/product.model.js";
 
 dotenv.config();
 
@@ -37,7 +38,48 @@ if (process.env.NODE_ENV === "production") {
 	});
 }
 
-app.listen(PORT, () => {
-	console.log("Server is running on http://localhost:" + PORT);
-	connectDB();
-});
+/* seedInitialProducts()
+ * Ensures required starter data exists in MongoDB.
+ * This is idempotent: it won't insert duplicates on restart.
+ */
+async function seedInitialProducts() {
+	// Define the exact document you requested to insert into `db.products`.
+	const seedProduct = {
+		name: "Blue collar business guide",
+		description: "A practical guide for starting and growing a blue collar business",
+		price: 29.99,
+		image: "https://www.bluecollarbizguide.com/logo.jpg",
+		category: "business",
+		isFeatured: true,
+	};
+
+	// Only insert if it doesn't already exist (by unique-ish key: name).
+	const existing = await Product.findOne({ name: seedProduct.name });
+	if (!existing) {
+		// Equivalent to: db.products.insertOne({...})
+		await Product.create(seedProduct);
+		console.log(`Seeded product into ecommerce.products: ${seedProduct.name}`);
+	} else {
+		// Keep startup safe and repeatable.
+		console.log(`Seed skipped (already exists): ${seedProduct.name}`);
+	}
+}
+
+/* startServer()
+ * Connects to MongoDB (ecommerce DB), seeds startup data, then starts Express.
+ */
+async function startServer() {
+	// Connect first so routes don't run before DB is ready.
+	await connectDB();
+
+	// Seed the requested product into `ecommerce.products`.
+	await seedInitialProducts();
+
+	// Start listening after DB + seed completes.
+	app.listen(PORT, () => {
+		console.log("Server is running on http://localhost:" + PORT);
+	});
+}
+
+// Boot the server (and fail fast if startup steps throw).
+startServer();
