@@ -49,7 +49,7 @@ async function seedInitialProducts() {
 	const seedProduct = {
 		name: "Blue collar business Guide",
 		description: "A practical guide for starting and growing a blue collar business",
-		price: 1.99,
+		price: 2499.99,
 		image: "https://www.bluecollarbizguide.com/logo.jpg",
 		category: "business",
 		isFeatured: true,
