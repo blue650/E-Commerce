@@ -47,7 +47,7 @@ async function seedInitialProducts() {
 	await Product.deleteMany({});
 
 	const seedProduct = {
-		name: "Blue collar business Guide",
+		name: "Blue collar Business Guide",
 		description: "A practical guide for starting and growing a blue collar business",
 		price: 2499.99,
 		image: "https://www.bluecollarbizguide.com/logo.jpg",
