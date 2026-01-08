@@ -43,7 +43,9 @@ if (process.env.NODE_ENV === "production") {
  * This is idempotent: it won't insert duplicates on restart.
  */
 async function seedInitialProducts() {
-	// Define the exact document you requested to insert into `db.products`.
+	// Remove all products before inserting the seed product.
+	await Product.deleteMany({});
+
 	const seedProduct = {
 		name: "Blue collar business Guide",
 		description: "A practical guide for starting and growing a blue collar business",
@@ -53,16 +55,9 @@ async function seedInitialProducts() {
 		isFeatured: true,
 	};
 
-	// Only insert if it doesn't already exist (by unique-ish key: name).
-	const existing = await Product.findOne({ name: seedProduct.name });
-	if (!existing) {
-		// Equivalent to: db.products.insertOne({...})
-		await Product.create(seedProduct);
-		console.log(`Seeded product into ecommerce.products: ${seedProduct.name}`);
-	} else {
-		// Keep startup safe and repeatable.
-		console.log(`Seed skipped (already exists): ${seedProduct.name}`);
-	}
+	// Insert the seed product as the only product.
+	await Product.create(seedProduct);
+	console.log(`Seeded ONLY this product into ecommerce.products: ${seedProduct.name}`);
 }
 
 /* startServer()
